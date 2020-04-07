@@ -18,41 +18,42 @@ def zips2pickles():
     colnames_gkg = pd.read_csv('../Headers/schema_csvs/GDELT_2.0_gdeltKnowledgeGraph_Column_Labels_Header_Row_Sep2016.tsv', sep='\t')['tableId']
 
     
-    for file in listdir('../Data/zips/GDELT2'):
+    for file in listdir('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/zips/GDELT2'):
         date_name = file.split('.')[0]+'.'+file.split('.')[1]
         
         if 'mentions' in date_name: 
-            df = pd.read_csv('../Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
-                                          names=colnames_mentions, index_col=['GLOBALEVENTID'])
+            df = pd.read_csv('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
+                                          names=colnames_mentions, index_col=['GLOBALEVENTID'], encoding='utf-8')
         if 'events' in date_name:
-            df = pd.read_csv('../Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
+            df = pd.read_csv('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
                                           names=colnames_export, index_col=['GLOBALEVENTID'], encoding='utf-8')
         if 'gkg' in date_name:
-            df = pd.read_csv('../Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
+            df = pd.read_csv('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
                                           names=colnames_gkg, index_col=['GKGRECORDID'], encoding='cp437')
 
-        df.to_pickle('../Data/pickles/GDELT2/{}'.format(date_name))
+        #df.to_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2/{}'.format(date_name))
+        df.to_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/Test/{}'.format(date_name))
         
         
-        remove('../Data/zips/GDELT2/{}'.format(file))
+        remove('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/zips/GDELT2/{}'.format(file))
     print('Data converted')
         
         
 def open_gkg_pickles_into_df():     
-    df = pd.concat((pd.read_pickle('../Data/pickles/GDELT2/{}'.format(f)) for f in listdir('../Data/pickles/GDELT2') if 'gkg' in f))
+    df = pd.concat((pd.read_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2/{}'.format(f)) for f in listdir('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2') if 'gkg' in f))
     df.set_index('DocumentIdentifier', inplace=True)
     df.drop_duplicates(inplace=True)
     print('Data read in')
     return df
     
 def open_mentions_pickles_into_df():     
-    df = pd.concat((pd.read_pickle('../Data/pickles/GDELT2/{}'.format(f)) for f in listdir('../Data/pickles/GDELT2') if 'mention' in f))
+    df = pd.concat((pd.read_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2/{}'.format(f)) for f in listdir('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2') if 'mention' in f))
     df.drop_duplicates(inplace=True)
     print('Data read in')
     return df
 
 def open_events_pickles_into_df():     
-    df = pd.concat((pd.read_pickle('../Data/pickles/GDELT2/{}'.format(f), encoding='utf-8') for f in listdir('../Data/pickles/GDELT2') if 'event' in f))
+    df = pd.concat((pd.read_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/Test/{}'.format(f)) for f in listdir('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/Test') if 'event' in f))
     df.drop_duplicates(inplace=True)
     print('Data read in')
     return df
