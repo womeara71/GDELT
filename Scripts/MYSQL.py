@@ -61,7 +61,8 @@ cursor.execute('DESCRIBE gkg')
 
 ### Alter Database Encodings
 mydb.set_charset_collation('utf8')
-###########cursor.execute('ALTER TABLE Gkg CONVERT TO CHARACTER SET utf8')
+cursor.execute("ALTER TABLE events CONVERT TO CHARACTER SET utf8")
+
 
 ### Join
 cursor.execute("SELECT * FROM users INNER JOIN ids USING (name)")
