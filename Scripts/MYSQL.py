@@ -59,9 +59,10 @@ cursor.execute('DESCRIBE gkg')
 ### Drop a Table
 
 
-### Alter Database Encodings
+### Alter Database Charactersets and Collations (Encoding)
 mydb.set_charset_collation('utf8')
 cursor.execute("ALTER TABLE events CONVERT TO CHARACTER SET utf8")
+cursor.execute("ALTER TABLE events COLLATE utf8_general_ci")
 
 
 ### Join
@@ -73,3 +74,9 @@ cursor.execute('DELETE FROM users ORDER BY user_name LIMIT 3')
 ### Advanced Regex
 cursor.execute("SELECT EventCode FROM events WHERE EventCode REGEXP '14[0-5]'")
 
+### Change Timeout 
+cursor.execute("SET GLOBAL net_write_timeout = 120")
+cursor.execute("SHOW VARIABLES LIKE 'wait_timeout'")
+
+### Check all Database Encodings on Server
+cursor.execute("SELECT * FROM information_schema.SCHEMATA")

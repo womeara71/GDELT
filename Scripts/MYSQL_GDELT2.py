@@ -22,11 +22,12 @@ cursor = mydb.cursor()
 def create_database(db_name):
     cursor.execute("CREATE DATABASE {}".format(db_name))
 
-
+#Try and improve this stuff through the chunksize parameter
 def df_to_MySQL(df, table_name, db_name):
-    engine = create_engine("mysql://womeara:ba@154@localhost/{}?charset=utf8".format(db_name))
+    engine = create_engine("mysql://womeara:ba@154@localhost/{}".format(db_name), encoding='utf8')
+    #engine = create_engine("mysql://womeara:ba@154@localhost/{}?".format(db_name))
     con = engine.connect()
-    df.to_sql(name=table_name, con=con, if_exists='append')
+    df.to_sql(name=table_name, con=con, if_exists='append', method='multi', chunksize=5000)
     con.close()
     
 

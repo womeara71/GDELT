@@ -5,10 +5,12 @@ Created on Wed Feb  5 10:07:21 2020
 @author: 605453
 """
 
+import os
+os.chdir('C:\\Users\\605453\\GDELT\\Scripts')
+
 import pandas as pd
 import numpy as np
 import mysql.connector
-import os
 from MYSQL_GDELT2 import create_database, df_to_MySQL
 from CLEAN_GDELT2 import open_gkg_pickles_into_df, open_mentions_pickles_into_df, open_events_pickles_into_df, zips2pickles 
 from sklearn.model_selection import train_test_split 
@@ -18,7 +20,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn import metrics
 from sklearn.ensemble import GradientBoostingRegressor
 
-os.chdir('C:\\Users\\605453\\Documents\\Projects\\Firesail\\Save Our Jobs\\Part 2\\Archive\\Scripts')
 
 # Convert Zipfiles pickles. Concatenate all files into representative dataframes
 zips2pickles()
@@ -29,6 +30,8 @@ df_gkg = open_gkg_pickles_into_df()
 df_to_MySQL(df_gkg, 'gkg', 'gdelt')
 
 df_events = open_events_pickles_into_df()
+df_events = df_events[int(len(df_events)/2):]
+#df_events[df_events.EventCode.astype(str).apply(lambda x: '--' in x)]
 df_to_MySQL(df_events, 'events', 'gdelt')
 
 

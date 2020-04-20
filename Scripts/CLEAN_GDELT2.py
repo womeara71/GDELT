@@ -29,7 +29,7 @@ def zips2pickles():
                                           names=colnames_export, index_col=['GLOBALEVENTID'], encoding='utf-8')
         if 'gkg' in date_name:
             df = pd.read_csv('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/zips/GDELT2/{}'.format(file), sep='\t', header=None, #dtype=str,
-                                          names=colnames_gkg, index_col=['GKGRECORDID'], encoding='cp437')
+                                          names=colnames_gkg, index_col=['GKGRECORDID'], encoding='utf-8')
 
         #df.to_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2/{}'.format(date_name))
         df.to_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/Test/{}'.format(date_name))
@@ -53,7 +53,7 @@ def open_mentions_pickles_into_df():
     return df
 
 def open_events_pickles_into_df():     
-    df = pd.concat((pd.read_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/Test/{}'.format(f)) for f in listdir('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/Test') if 'event' in f))
+    df = pd.concat((pd.read_pickle('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2/{}'.format(f)) for f in listdir('C:/Users/605453/Documents/Projects/Firesail/Save Our Jobs/Part 2/Archive/Data/pickles/GDELT2') if 'event' in f))
     df.drop_duplicates(inplace=True)
     print('Data read in')
     return df
