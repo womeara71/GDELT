@@ -80,3 +80,11 @@ cursor.execute("SHOW VARIABLES LIKE 'wait_timeout'")
 
 ### Check all Database Encodings on Server
 cursor.execute("SELECT * FROM information_schema.SCHEMATA")
+
+
+### Elaborate-ish Join
+variables = 'm.GlobalEventID, m.MentionTimeDate, m.EventTimeDate, e.EventCode, e.IsRootEvent, e.AvgTone'
+conditions = "m.GlobalEventID=e.GlobalEventID AND (e.EventCode REGEXP '^14[0-5]' AND e.ActionGeo_CountryCode = 'US')"
+
+
+
