@@ -40,29 +40,37 @@ def assign_dates(df, event_dates):
     return df
     
 def return_split(df):
-    X = df.iloc[:,:-1]
-    y = df.iloc[:,-1]
-    oversample = SMOTE()
-    X, y = oversample.fit_resample(X, y)
-    step = 5
-    X_new = np.array([X.iloc[i:i+step].values for i in range(0,len(X) - step, step)])
-    y_new = np.array([y[i+step-1] for i in range(0,len(X) - step, step)])
-    y_new  = y_new.reshape(len(y_new), 1)
-    number_of_rows = X_new.shape[0]
+    number_of_rows = len(df)
     random_rows = np.random.choice(number_of_rows, size=round(.66*number_of_rows), replace=False)
-    opp_random_rows = np.array([x for x in range(len(X_new)) if x not in random_rows])
-    X_train = X_new[random_rows, :]
-    X_test = X_new[opp_random_rows, :]
-    y_train = y_new[random_rows]
-    y_test = y_new[opp_random_rows]
+    opp_random_rows = np.array([x for x in range(len(df)) if x not in random_rows])
+    Train = df.iloc[random_rows,:]
+    Test = df.iloc[opp_random_rows]
+   
+    X_train = Train.iloc[:,:-1]
+    y_train = Train.iloc[:,-1]
+    oversample = SMOTE()
+    X_train, y_train = oversample.fit_resample(X_train, y_train)
+    step = 5
+    X_train = np.array([X_train.iloc[i:i+step].values for i in range(0,len(X_train) - step, step)])
+    y_train = np.array([y_train[i+step-1] for i in range(0,len(y_train) - step, step)])   
+    y_train  = y_train.reshape(len(y_train), 1)
+
+    
+    X_test = Test.iloc[:,:-1]
+    y_test = Test.iloc[:,-1]
+    step = 5
+    X_test = np.array([X_test.iloc[i:i+step].values for i in range(0,len(X_test) - step, step)])
+    y_test = np.array([y_test[i+step-1] for i in range(0,len(y_test) - step, step)])
+    y_test  = y_test.reshape(len(y_test), 1)
+
     return X_train, X_test, y_train, y_test 
 
 def create_model(df_assigned):
     model = Sequential()
     model.add(LSTM(32, return_sequences=False, 
-                   dropout=0.3,
+                   dropout=0.5,
                    input_shape=(X_train.shape[1], X_train.shape[2])))
-    #model.add(Dense(32))
+    model.add(Dense(32))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     print("Model Compiled")
@@ -98,8 +106,8 @@ X_train, X_test, y_train, y_test = return_split(df_assigned)
 model = create_model(X_train)
 
 history = model.fit(X_train,  y_train, 
-                    batch_size=32, epochs=35,
-                    class_weight = {0:0.2, 1:0.8})
+                    batch_size=32, epochs=65,
+                    class_weight = {0:0.3, 1:0.7})
 
 #model.save("C:\\Users\\605453\\Documents\\GDELT\\Models\\model")
 #jenk = load_model("C:\\Users\\605453\\Documents\\GDELT\\Models\\model")

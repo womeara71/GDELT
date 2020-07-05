@@ -3,7 +3,7 @@
 """
 Created on Tue Oct 22 10:24:34 2019
 
-@author: jamesdawahare
+@author: 605453
 """
 import pandas as pd
 from os import remove, listdir

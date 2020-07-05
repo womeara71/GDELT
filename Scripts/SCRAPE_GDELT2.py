@@ -3,7 +3,7 @@
 """
 Created on Mon Oct 21 11:35:17 2019
 
-@author: jamesdawahare
+@author: 605453
 """
 
 import urllib.request
@@ -12,12 +12,12 @@ import datetime
 
 days_to_collect = 28
 #days_to_collect = 1
-GKG = False
-Mentions = False
+GKG = True
+Mentions = True
 Events = True
 
 
-start = datetime.datetime(year=2019,month=6,day=22,hour=23,minute=45)
+start = datetime.datetime(year=2019,month=5,day=24,hour=15,minute=00)
 date_list = [start - datetime.timedelta(minutes=15*x) for x in range(days_to_collect*96)]
 date_list = list(map(lambda x: x.strftime("%Y%m%d%H%M") + '00', date_list))
                     

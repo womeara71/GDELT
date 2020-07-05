@@ -51,7 +51,11 @@ print(cursor.rowcount, "record insterted")
 
 ### Alter Column DATA TYPE
 cursor.execute('ALTER TABLE gkg MODIFY V2LOCATIONS LONGTEXT')
+
+
+### Show Column Names
 cursor.execute('DESCRIBE gkg')
+
     
 ### Kill Connections
 
