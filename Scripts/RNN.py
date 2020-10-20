@@ -6,9 +6,8 @@ Created on Sat Apr 25 11:25:14 2020
 """
 import mysql.connector
 import pandas as pd
-from keras.models import Sequential, load_model
-from keras.layers import LSTM, Dropout, Dense
-from sklearn.preprocessing import LabelEncoder
+from keras.models import Sequential
+from keras.layers import LSTM,  Dense
 from sklearn.metrics import confusion_matrix
 from imblearn.over_sampling import SMOTE
 import numpy as np
@@ -55,7 +54,6 @@ def return_split(df):
     y_train = np.array([y_train[i+step-1] for i in range(0,len(y_train) - step, step)])   
     y_train  = y_train.reshape(len(y_train), 1)
 
-    
     X_test = Test.iloc[:,:-1]
     y_test = Test.iloc[:,-1]
     step = 5

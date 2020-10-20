@@ -12,11 +12,12 @@ mydb = mysql.connector.connect(
   host="localhost",
   user="womeara",
   passwd="ba@154",
-  database="gdelt"
+  database="practice"
 )
 
 cursor = mydb.cursor()
 
+cursor.close()
 
 
 def create_database(db_name):
@@ -29,5 +30,3 @@ def df_to_MySQL(df, table_name, db_name):
     con = engine.connect()
     df.to_sql(name=table_name, con=con, if_exists='append', method='multi', chunksize=5000)
     con.close()
-    
-

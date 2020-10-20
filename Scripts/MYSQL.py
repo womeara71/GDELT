@@ -11,10 +11,30 @@ mydb = mysql.connector.connect(
   host="localhost",
   user="womeara",
   passwd="ba@154",
-  database="gdelt"
+  database='gdelt'
 )
 
 cursor = mydb.cursor()
+cursor.close()
+
+def table_deleter(db):
+    mydb = mysql.connector.connect(
+    host="localhost",
+    user="womeara",
+    passwd="ba@154",
+    database=db)
+
+    cursor = mydb.cursor()
+    cursor.execute("DROP TABLE mentions")
+    print("Dropped Mentions")
+    cursor.execute("DROP TABLE gkg")
+    print("Dropped Gkg")
+    cursor.execute("DROP TABLE events")
+    print("Dropped Events")
+    
+    cursor.close()
+    print("Deleted")
+
 
 #  Create a database
 # =============================================================================
@@ -65,15 +85,15 @@ cursor.execute('DESCRIBE gkg')
 
 ### Alter Database Charactersets and Collations (Encoding)
 mydb.set_charset_collation('utf8')
-cursor.execute("ALTER TABLE events CONVERT TO CHARACTER SET utf8")
-cursor.execute("ALTER TABLE events COLLATE utf8_general_ci")
+cursor.execute("ALTER TABLE gkg CONVERT TO CHARACTER SET utf8")
+cursor.execute("ALTER TABLE gkg COLLATE utf8_general_ci")
 
 
 ### Join
 cursor.execute("SELECT * FROM users INNER JOIN ids USING (name)")
 
 ### Deleting Rows
-cursor.execute('DELETE FROM users ORDER BY user_name LIMIT 3')
+cursor.execute("DELETE FROM users ORDER BY user_name LIMIT 3")
 
 ### Advanced Regex
 cursor.execute("SELECT EventCode FROM events WHERE EventCode REGEXP '14[0-5]'")
@@ -85,10 +105,6 @@ cursor.execute("SHOW VARIABLES LIKE 'wait_timeout'")
 ### Check all Database Encodings on Server
 cursor.execute("SELECT * FROM information_schema.SCHEMATA")
 
-
 ### Elaborate-ish Join
 variables = 'm.GlobalEventID, m.MentionTimeDate, m.EventTimeDate, e.EventCode, e.IsRootEvent, e.AvgTone'
 conditions = "m.GlobalEventID=e.GlobalEventID AND (e.EventCode REGEXP '^14[0-5]' AND e.ActionGeo_CountryCode = 'US')"
-
-
-
