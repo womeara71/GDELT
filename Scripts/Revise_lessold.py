@@ -38,7 +38,7 @@ class Scraper(object):
         self.end_month, self.end_day, self.end_year = [int(x) for x in end_date.split("-")]
         self.folder = folder
         self.db = db
-                
+        
     def pull(self, url_type, date, dtype):
         url = url_type.format(date)
         file_location = '{}{}.{}.CSV.zip'.format(self.folder, date, dtype)
@@ -69,14 +69,14 @@ class Scraper(object):
     def execute(self, url, date, table, colnames, index, GKG_drop = False):
         try:
             result = self.pull(url, date, table)
+            print(result)
             df = self.pandafy(result, colnames, index, GKG_drop = False)
             self.insert(df, table, self.db, index)
-            print(result)
         except:
             error  = "Fail:{}-{}".format(date, table)
-            Errors.append(error)
             print(error)
             print(sys.exc_info()[0])
+            Errors.append(error)
             
     def scrape(self, GKG=False, Mentions=False, Events=False):
         start = datetime.datetime(year = self.beg_year, month = self.beg_month, day = self.beg_day, hour=00, minute=00)
@@ -107,10 +107,10 @@ class Scraper(object):
         with open(error_log_final, "w") as outfile:
                 outfile.write("\n".join(Errors))
                 
-    def missedDates(self, beg_date, end_date, GKG=False, Mentions=False, Events=False):
-        #missedDates module will include both the beginning date and the end date
+    def missedDates(beg_date, end_date, GKG=False, Mentions=False, Events=False):
         beg_year, beg_month, beg_day, beg_hour, beg_min = int(beg_date[:4]), int(beg_date[4:6]), int(beg_date[6:8]), int(beg_date[8:10]), int(beg_date[10:12])
         end_year, end_month, end_day, end_hour, end_min = int(end_date[:4]), int(end_date[4:6]), int(end_date[6:8]), int(end_date[8:10]), int(end_date[10:12])
+        
         
         start = datetime.datetime(year = beg_year, month = beg_month, day = beg_day, hour = beg_hour, minute = beg_min)
         end = datetime.datetime(year = end_year, month = end_month, day = end_day, hour = end_hour, minute = end_min)    
@@ -119,37 +119,6 @@ class Scraper(object):
         date_list = [end]
         date_list.extend([end - datetime.timedelta(minutes=15*x) for x in range(1, int((days_to_collect.total_seconds()/60)/15))])
         date_list.extend([start])
-        date_list = list(dict.fromkeys(date_list) )
-        date_list = list(map(lambda x: x.strftime("%Y%m%d%H%M") + '00', date_list))
-
-        global Errors
-        Errors = []
-        
-        for date in date_list:
-            print(date)
-            if GKG:
-                self.execute(self.GKG_url, date, "gkg", self.colnames_gkg, 'GKGRECORDID')
-
-            if Mentions:
-                self.execute(self.Mentions_url, date, "mentions", self.colnames_mentions, 'GLOBALEVENTID')
-                
-            if Events:
-                self.execute(self.Events_url, date, "events", self.colnames_events, 'GLOBALEVENTID')
-                
-            with open(self.error_log, "w") as outfile:
-                outfile.write("\n".join(Errors))
-        
-        now = datetime.datetime.now()
-        error_log_final = "C:\\Users\\605453\\Documents\\GDELT\\Error Logs\\Errors_" + now.strftime("%d%m%Y_%H%M%S") + ".txt"
-        with open(error_log_final, "w") as outfile:
-                outfile.write("\n".join(Errors))
-                
-
-prac = Scraper("06-05-2019", "06-15-2019",
-               "C:/Users/605453/Downloads/",
-               "gdelt")
-
-prac.missedDates("20190611113000", "20190613030000", GKG = True, Mentions = True, Events = True)
     
 
 
@@ -157,11 +126,9 @@ prac.missedDates("20190611113000", "20190613030000", GKG = True, Mentions = True
 '''
 To Do's:
 1. Function to Reinsert on Strange Errors
-2. Set Date Column as index??? -- Easy way to see the dates included in the database
+2. Set Date Column as index???
 4. Read up on character sets and mysql architecture
-5. Deduplicate scrape and missedDates
-6. Switch so MissedDates and Scraper include bot dates or only one date -- same pattern
-
+5. Change to spit out error link
     
 1. More Agnostic to RDBMS
 2. Refactor passing of variables
